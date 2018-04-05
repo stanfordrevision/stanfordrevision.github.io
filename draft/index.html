@@ -1,0 +1,132 @@
+<div id="container">
+</div>
+<button type="button" onclick="draft()">Draft</button>
+<div id="drafter">
+</div>
+<script>
+const makeNSRequest = function(path) {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    const ns = "http://markamendoza.com"
+    xhr.open('GET', ns + path);
+    xhr.onload = function () {
+      if (this.status >= 200 && this.status < 300) {
+        resolve(xhr.response);
+      } else {
+        reject({
+          status: this.status,
+          statusText: xhr.statusText
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText
+      });
+    };
+    xhr.send();
+  });
+}
+
+const getCards = function() {
+    return makeNSRequest("/draft/list").then(file =>{
+        const lines = file.split("#"); 
+        const obj = {};
+        let current;
+        let cards = [];
+        lines.forEach(line => {
+            if (line.charAt(1) !== " ") {
+                if (current) {
+                    obj[current] = cards;
+                    cards = [];
+                }
+               current = line.trim();
+            } else {
+                cards.push(line.trim());
+            }
+        });
+        obj[current] = cards;
+        return obj;
+    });
+};
+
+const ordered = ["Dominion", "Intrigue", "Seaside", "Alchemy", "Prosperity", "Cornucopia", "Hinterlands", "Dark Ages", "Guilds", "Adventures",  "Empires", "Nocturne", "Promo", "Adventures Events", "Empires Events", "Promo Events", "Empires Landmarks"]
+const buttons = [];
+const selected = [];
+const handle = function() {
+    selected.length = 0;
+    for (const i in buttons) {
+        if (buttons[i].checked) {
+            selected.push(ordered[i]);
+        }
+    }
+}
+let lookup;
+getCards().then(dict => {
+    const container = document.getElementById("container");
+    for (const i in ordered) {
+        const exp = ordered[i];
+        var d = document.createElement("div");
+        d.innerHTML = "\
+            <span> " + exp + "</span> <input type='checkbox' onclick='handle()'> ";
+        container.appendChild(d);
+        buttons[i] = d.children[1];
+    }
+    lookup = dict;
+});
+
+const selectionDeck = [];
+const selectedCards = [];
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+const draft = function() {
+    selectedCards.length = 0;
+    selectionDeck.length = 0;
+    selected.forEach(set => {
+        lookup[set].forEach(card => {
+            selectionDeck.push(card);
+        });
+    });
+    shuffleArray(selectionDeck);
+    advance();
+}
+const dcont = document.getElementById("drafter");
+const getHandler = function(card) {
+    return function() {
+        chz(card);
+    }
+}
+const dispcard = function(card, dohandle) {
+    const i = document.createElement("img");
+    if (dohandle) {
+        i.onclick = getHandler(card);
+    }
+    i.src = card;
+    dcont.appendChild(i);
+};
+const advance = function() {
+    dcont.innerHTML = "";
+    for (let i = 0; i < 3; i++) {
+        dispcard(selectionDeck.pop(), true);
+    }
+}
+let cap = 10;
+const chz = function(card) {
+    selectedCards.push(card);
+    if (selectedCards.length === cap) {
+        dcont.innerHTML = "";
+        selectedCards.forEach(c => {
+            dispcard(c, false);
+        });
+    } else {
+        advance();
+    }
+}
+
+
+</script>
