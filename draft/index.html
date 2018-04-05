@@ -118,7 +118,7 @@ const advance = function() {
 }
 const chz = function(card) {
     selectedCards.push(card);
-    const cap = document.getElementById("cap").value;
+    const cap = parseInt(document.getElementById("cap").value);
     if (selectedCards.length === cap) {
         dcont.innerHTML = "";
         selectedCards.forEach(c => {
