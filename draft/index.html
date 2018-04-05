@@ -1,6 +1,7 @@
 <div id="container">
 </div>
 <button type="button" onclick="draft()">Draft</button>
+<input id="cap" type="number" min="0" value="10"> cards
 <div id="drafter">
 </div>
 <script>
@@ -115,9 +116,10 @@ const advance = function() {
         dispcard(selectionDeck.pop(), true);
     }
 }
-let cap = 10;
 const chz = function(card) {
     selectedCards.push(card);
+    const cap = document.getElementById("cap").value;
+    console.log(cap);
     if (selectedCards.length === cap) {
         dcont.innerHTML = "";
         selectedCards.forEach(c => {
