@@ -32,7 +32,7 @@ const makeNSRequest = function(path) {
 
 const getCards = function() {
     return makeNSRequest("/draft/list").then(file =>{
-        const lines = file.split("#"); 
+        const lines = file.split("#");
         const obj = {};
         let current;
         let cards = [];
@@ -52,7 +52,24 @@ const getCards = function() {
     });
 };
 
-const ordered = ["Dominion", "Intrigue", "Seaside", "Alchemy", "Prosperity", "Cornucopia", "Hinterlands", "Dark Ages", "Guilds", "Adventures",  "Empires", "Nocturne", "Promo", "Adventures Events", "Empires Events", "Promo Events", "Empires Landmarks"]
+const ordered = ["Dominion",
+                "Intrigue",
+                "Seaside",
+                "Alchemy",
+                "Prosperity",
+                "Cornucopia",
+                "Hinterlands",
+                "Dark Ages",
+                "Guilds",
+                "Adventures",
+                "Empires",
+                "Nocturne",
+                "Promo",
+                "Adventures Events",
+                "Empires Events",
+                "Promo Events",
+                "Empires Landmarks"]
+
 const buttons = [];
 const selected = [];
 const handle = function() {
