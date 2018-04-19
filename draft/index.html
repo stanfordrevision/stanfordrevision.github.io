@@ -1,7 +1,8 @@
 <div id="container">
 </div>
 <button type="button" onclick="draft()">Draft</button>
-<input id="cap" type="number" min="0" value="10"> cards
+<input id="cap" type="number" min="0" value="10"> cards,
+<input id="lorecap" type="number" min="0" value="2"> landmarks and/or events
 <div id="drafter">
 </div>
 <script>
@@ -127,16 +128,41 @@ const dispcard = function(card, dohandle) {
     i.src = card;
     dcont.appendChild(i);
 };
+
+const isLorE = function(card) {
+  for (const i in ordered) {
+    const st = ordered[i]
+    if (st.includes("Events") || st.includes("Landmarks")) {
+      if (lookup[st].includes(card)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+let numLorE = 0;
 const advance = function() {
+    const lorecap = parseInt(document.getElementById("lorecap").value);
     dcont.innerHTML = "";
     for (let i = 0; i < 3; i++) {
-        dispcard(selectionDeck.pop(), true);
+        let c;
+        while(true) {
+          c = selectionDeck.pop();
+          if (numLorE < lorecap || !isLorE(c)) {
+            break;
+          }
+        }
+        dispcard(c, true);
     }
 }
 const chz = function(card) {
+    if (isLorE(card)) {
+      numLorE++;
+    }
     selectedCards.push(card);
     const cap = parseInt(document.getElementById("cap").value);
-    if (selectedCards.length === cap) {
+    if (selectedCards.length - numLorE === cap) {
         dcont.innerHTML = "";
         selectedCards.forEach(c => {
             dispcard(c, false);
