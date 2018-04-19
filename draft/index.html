@@ -1,8 +1,10 @@
+<div id="pre">
 <div id="container">
 </div>
 <button type="button" onclick="draft()">Draft</button>
 <input id="cap" type="number" min="0" value="10"> cards,
 <input id="lorecap" type="number" min="0" value="2"> landmarks and/or events
+</div>
 <div id="drafter">
 </div>
 <script>
@@ -104,6 +106,7 @@ function shuffleArray(array) {
     }
 }
 const draft = function() {
+    document.getElementById("pre").style.display = 'none';
     selectedCards.length = 0;
     selectionDeck.length = 0;
     selected.forEach(set => {
