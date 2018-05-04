@@ -90,7 +90,7 @@ getCards().then(dict => {
         const exp = ordered[i];
         var d = document.createElement("div");
         d.innerHTML = "\
-            <span> " + exp + "</span> <input type='checkbox' onclick='handle()'> ";
+            <span> " + exp + "</span> <input type='checkbox' onclick='handle()' checked='true'> ";
         container.appendChild(d);
         buttons[i] = d.children[1];
     }
